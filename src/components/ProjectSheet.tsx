@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PROJECT_COLORS } from '../projectStyle';
+import { leastUsedColor, PROJECT_COLORS } from '../projectStyle';
 import { useStore } from '../store';
 import type { Project } from '../types';
 import { ProjectBadge } from './ProjectBadge';
@@ -9,7 +9,10 @@ import { Sheet } from './Sheet';
 export function ProjectSheet({ project, onClose, onDeleted }: { project?: Project; onClose(): void; onDeleted?(): void }) {
   const { data, saveProject, deleteProject } = useStore();
   const [name, setName] = useState(project?.name ?? '');
-  const [color, setColor] = useState(project?.color ?? PROJECT_COLORS[0]);
+  const [color, setColor] = useState(
+    () => project?.color ?? leastUsedColor((data?.projects ?? []).map((p) => p.color)),
+  );
+  const custom = !PROJECT_COLORS.some((c) => c.toLowerCase() === color.toLowerCase());
 
   const save = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +60,11 @@ export function ProjectSheet({ project, onClose, onDeleted }: { project?: Projec
               <button key={c} type="button" className={'color-opt' + (color === c ? ' on' : '')} style={{ background: c }}
                 onClick={() => setColor(c)} aria-label={`色 ${c}`} aria-pressed={color === c} />
             ))}
+            <label className={'color-opt color-custom' + (custom ? ' on' : '')} style={custom ? { background: color } : undefined}
+              aria-label="ほかの色を選ぶ">
+              {!custom && '＋'}
+              <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
+            </label>
           </div>
         </div>
 
