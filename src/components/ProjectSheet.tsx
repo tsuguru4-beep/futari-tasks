@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PROJECT_COLORS, PROJECT_EMOJIS } from '../projectStyle';
+import { PROJECT_COLORS } from '../projectStyle';
 import { useStore } from '../store';
 import type { Project } from '../types';
 import { ProjectBadge } from './ProjectBadge';
@@ -9,7 +9,6 @@ import { Sheet } from './Sheet';
 export function ProjectSheet({ project, onClose, onDeleted }: { project?: Project; onClose(): void; onDeleted?(): void }) {
   const { data, saveProject, deleteProject } = useStore();
   const [name, setName] = useState(project?.name ?? '');
-  const [emoji, setEmoji] = useState(project?.emoji ?? '');
   const [color, setColor] = useState(project?.color ?? PROJECT_COLORS[0]);
 
   const save = (e: React.FormEvent) => {
@@ -19,7 +18,7 @@ export function ProjectSheet({ project, onClose, onDeleted }: { project?: Projec
     saveProject({
       id: project?.id ?? crypto.randomUUID(),
       name: name.trim(),
-      emoji,
+      emoji: '',
       color,
       sort: project?.sort ?? Math.max(0, ...projects.map((p) => p.sort)) + 1,
       created_at: project?.created_at ?? new Date().toISOString(),
@@ -37,7 +36,7 @@ export function ProjectSheet({ project, onClose, onDeleted }: { project?: Projec
     onDeleted?.();
   };
 
-  const preview: Project = { id: '', name: name || '？', emoji, color, sort: 0, created_at: '' };
+  const preview: Project = { id: '', name: name || '？', emoji: '', color, sort: 0, created_at: '' };
 
   return (
     <Sheet title={project ? 'プロジェクトを編集' : 'プロジェクトを作成'} onClose={onClose}>
@@ -49,19 +48,6 @@ export function ProjectSheet({ project, onClose, onDeleted }: { project?: Projec
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="例：家事" autoFocus={!project}
               enterKeyHint="done" maxLength={40} />
           </label>
-        </div>
-
-        <div className="field">
-          <span>絵文字</span>
-          <div className="emoji-grid">
-            <button type="button" className={'emoji-opt' + (emoji === '' ? ' on' : '')} onClick={() => setEmoji('')}
-              aria-label="絵文字なし">なし</button>
-            {PROJECT_EMOJIS.map((em) => (
-              <button key={em} type="button" className={'emoji-opt' + (emoji === em ? ' on' : '')} onClick={() => setEmoji(em)}>
-                {em}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div className="field">

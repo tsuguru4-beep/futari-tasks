@@ -41,6 +41,7 @@ export function TaskSheet({ task, projectId, onClose }: { task?: Task; projectId
       memo: memo.trim(),
       done: task?.done ?? false,
       done_at: task?.done_at ?? null,
+      canceled: task?.canceled ?? false,
       created_at: task?.created_at ?? now,
       updated_at: now,
     });
@@ -93,7 +94,7 @@ export function TaskSheet({ task, projectId, onClose }: { task?: Task; projectId
           <span>プロジェクト</span>
           <select value={project} onChange={(e) => setProject(e.target.value)}>
             {projects.map((p) => (
-              <option key={p.id} value={p.id}>{p.emoji ? `${p.emoji} ` : ''}{p.name}</option>
+              <option key={p.id} value={p.id}>{p.name}</option>
             ))}
           </select>
         </label>

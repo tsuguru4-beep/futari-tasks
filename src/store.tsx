@@ -125,3 +125,5 @@ export const sortOpen = (ts: Task[]) =>
 
 // 完了：新しく完了した順
 export const sortDone = (ts: Task[]) => [...ts].sort((a, b) => (b.done_at ?? '').localeCompare(a.done_at ?? ''));
+
+export const isOverdue = (t: Task, today: string) => !t.done && !!t.due_date && t.due_date < today;

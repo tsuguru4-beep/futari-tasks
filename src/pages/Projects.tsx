@@ -24,6 +24,7 @@ export function Projects() {
     saveProject({
       id: crypto.randomUUID(),
       ...s,
+      emoji: '',
       sort: Math.max(0, ...projects.map((p) => p.sort)) + 1,
       created_at: new Date().toISOString(),
     });
@@ -57,7 +58,7 @@ export function Projects() {
           <div className="suggest">
             {suggestions.map((s) => (
               <button key={s.name} type="button" className="btn" onClick={() => addSuggested(s)}>
-                {s.emoji} {s.name}
+                {s.name}
               </button>
             ))}
           </div>

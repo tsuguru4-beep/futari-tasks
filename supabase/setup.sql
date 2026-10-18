@@ -18,6 +18,7 @@ create table if not exists public.tasks (
   memo text not null default '',
   done boolean not null default false,
   done_at timestamptz,
+  canceled boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

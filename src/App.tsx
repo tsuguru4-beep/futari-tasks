@@ -6,6 +6,7 @@ import { getLocal, setLocal } from './local';
 import { Home } from './pages/Home';
 import { ProjectDetail } from './pages/ProjectDetail';
 import { Projects } from './pages/Projects';
+import { Review } from './pages/Review';
 import { Login, WhoAmI } from './pages/Welcome';
 import { useRoute } from './router';
 import { SessionCtx, type Session } from './session';
@@ -65,6 +66,8 @@ function Main() {
           <ProjectDetail key={route.id} id={route.id} />
         ) : route.name === 'projects' ? (
           <Projects />
+        ) : route.name === 'review' ? (
+          <Review />
         ) : (
           <Home />
         )}

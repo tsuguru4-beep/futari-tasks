@@ -2,7 +2,7 @@ import { href, type Route } from '../router';
 import { Icon } from './Icon';
 
 export function BottomNav({ route }: { route: Route }) {
-  const onProjects = route.name !== 'home';
+  const onProjects = route.name === 'projects' || route.name === 'project';
   return (
     <nav className="bottom-nav">
       <a href={href({ name: 'home' })} className={onProjects ? '' : 'on'} aria-current={onProjects ? undefined : 'page'}>

@@ -19,6 +19,7 @@ export interface Task {
   memo: string;
   done: boolean;
   done_at: string | null;
+  canceled: boolean; // やめた（done も true にして完了欄に並べる）
   created_at: string;
   updated_at: string;
 }

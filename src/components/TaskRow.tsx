@@ -14,8 +14,13 @@ export function TaskRow({ task, today, project, onOpen }: {
   const { me } = useSession();
   const { saveTask } = useStore();
   const due = task.due_date ? dueInfo(task.due_date, today) : null;
+  // 完了・やめたのどちらからでも、チェックを外せば未完了に戻る
   const toggle = () =>
-    saveTask({ ...task, done: !task.done, done_at: task.done ? null : new Date().toISOString() });
+    saveTask(
+      task.done
+        ? { ...task, done: false, canceled: false, done_at: null }
+        : { ...task, done: true, done_at: new Date().toISOString() },
+    );
 
   return (
     <li className={'task' + (task.done ? ' done' : '')}>
@@ -27,10 +32,9 @@ export function TaskRow({ task, today, project, onOpen }: {
         <span className="task-title">{task.title}</span>
         <span className="task-meta">
           {project && (
-            <span className="meta-project" style={{ color: project.color }}>
-              {project.emoji ? `${project.emoji} ` : ''}{project.name}
-            </span>
+            <span className="meta-project" style={{ color: project.color }}>{project.name}</span>
           )}
+          {task.canceled && <span className="pill canceled">やめた</span>}
           <span className={'pill who-' + (task.assignee === 'both' ? 'both' : task.assignee === me ? 'me' : 'partner')}>
             {assigneeLabel(task.assignee, me)}
           </span>

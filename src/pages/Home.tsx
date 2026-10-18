@@ -8,6 +8,7 @@ import { TaskRow } from '../components/TaskRow';
 import { TaskSheet } from '../components/TaskSheet';
 import { addDays, fmtLong, isLocalToday, todayStr } from '../date';
 import { matchFilter } from '../people';
+import { href } from '../router';
 import { useSession } from '../session';
 import { sortDone, sortOpen, useStore } from '../store';
 import type { Task } from '../types';
@@ -31,7 +32,7 @@ export function Home() {
   const overdue = open.filter((t) => t.due_date! < today);
   const dueToday = open.filter((t) => t.due_date === today);
   const upcoming = open.filter((t) => t.due_date! > today && t.due_date! <= addDays(today, UPCOMING_DAYS));
-  const doneToday = sortDone(tasks.filter((t) => t.done && isLocalToday(t.done_at, today)));
+  const doneToday = sortDone(tasks.filter((t) => t.done && !t.canceled && isLocalToday(t.done_at, today)));
 
   const row = (t: Task) => <TaskRow key={t.id} task={t} today={today} project={byId.get(t.project_id)} onOpen={setEditing} />;
   const section = (title: string, list: Task[], tone = '') =>
@@ -55,6 +56,16 @@ export function Home() {
       </header>
 
       <FilterChips value={filter} onChange={setFilter} />
+
+      {overdue.length > 0 && (
+        <a href={href({ name: 'review' })} className="review-banner">
+          <span>
+            <strong>振り返り</strong>
+            <small>期限が過ぎたタスクが{overdue.length}件あります。やる・延期・やめるに振り分けましょう</small>
+          </span>
+          <Icon name="chevron" size={22} />
+        </a>
+      )}
 
       {section('期限切れ', overdue, 'tone-over')}
       {section('今日', dueToday, 'tone-today')}
